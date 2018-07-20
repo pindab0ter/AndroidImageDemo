@@ -1,4 +1,4 @@
-package nl.pindab0ter.imagedemo.feature
+package nl.pindab0ter.imagedemo
 
 import org.junit.Test
 

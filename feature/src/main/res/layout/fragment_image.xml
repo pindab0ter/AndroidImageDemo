@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JavaImageFragment"
     tools:showIn="@layout/activity_main">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/image_view"
         android:layout_width="380dp"
         android:layout_height="0dp"
         android:padding="64dp"

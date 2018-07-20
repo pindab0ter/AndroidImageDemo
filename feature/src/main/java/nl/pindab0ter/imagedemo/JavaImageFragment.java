@@ -1,4 +1,4 @@
-package nl.pindab0ter.imagedemo.feature;
+package nl.pindab0ter.imagedemo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import nl.pindab0ter.imagedemo.feature.R;
 
 public class JavaImageFragment extends Fragment implements DownloadImageListener {
 
@@ -33,9 +35,12 @@ public class JavaImageFragment extends Fragment implements DownloadImageListener
 
     @Override
     public void onImageDownloaded(Bitmap bitmap) {
-        ImageView imageView = getView().findViewById(R.id.image);
+        View parentView = getView();
 
-        imageView.setImageBitmap(bitmap);
+        if (parentView != null) {
+            ImageView imageView = getView().findViewById(R.id.image_view);
+            imageView.setImageBitmap(bitmap);
+        }
     }
 }
 
@@ -61,6 +66,7 @@ class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         } catch (final IOException ioException) {
             // Handle error
         }
+
         return bitmap;
     }
 
