@@ -2,7 +2,6 @@ package nl.pindab0ter.imagedemo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +17,7 @@ import java.net.URL;
 
 import nl.pindab0ter.imagedemo.feature.R;
 
-public class JavaImageFragment extends Fragment implements DownloadImageListener {
+public class JavaImageFragment extends Fragment {
 
     @Nullable
     @Override
@@ -30,48 +29,29 @@ public class JavaImageFragment extends Fragment implements DownloadImageListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new DownloadImageTask(this).execute("https://hansvl.nl/images/java.png");
-    }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(getString(R.string.image_java));
+                    final InputStream inputStream = url.openStream();
+                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    View parentView = getView();
 
-    @Override
-    public void onImageDownloaded(Bitmap bitmap) {
-        View parentView = getView();
-
-        if (parentView != null) {
-            ImageView imageView = getView().findViewById(R.id.image_view);
-            imageView.setImageBitmap(bitmap);
-        }
-    }
-}
-
-interface DownloadImageListener {
-    void onImageDownloaded(Bitmap bitmap);
-}
-
-class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    private DownloadImageListener listener;
-
-    DownloadImageTask(DownloadImageListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    protected Bitmap doInBackground(String... urls) {
-        final String url = urls[0];
-        Bitmap bitmap = null;
-
-        try {
-            final InputStream inputStream = new URL(url).openStream();
-            bitmap = BitmapFactory.decodeStream(inputStream);
-        } catch (final IOException ioException) {
-            // Handle error
-        }
-
-        return bitmap;
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        listener.onImageDownloaded(bitmap);
+                    if (parentView != null) {
+                        final ImageView imageView = parentView.findViewById(R.id.image_view);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
+

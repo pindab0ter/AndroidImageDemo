@@ -22,7 +22,8 @@ class KotlinImageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         thread {
-            val imageStream = URL("https://hansvl.nl/images/kotlin.png").openStream()
+            val url = URL(getString(R.string.image_kotlin))
+            val imageStream = url.openStream()
             val bitmap = BitmapFactory.decodeStream(imageStream)
             this@KotlinImageFragment.activity?.runOnUiThread {
                 image_view.setImageBitmap(bitmap)
